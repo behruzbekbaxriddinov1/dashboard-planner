@@ -82,7 +82,11 @@
       </div>
       <div class="actions">
         <div class="profile">
-          <img id="profilePic" class="avatar" src="https://via.placeholder.com/80" alt="avatar" />
+          <img id="profilePic" class="avatar" 
+     src="profile.png" 
+     alt="avatar" 
+     onerror="this.onerror=null;this.src='profile.png';" />
+
           <div>
             <div id="profileName" style="font-weight:700">Guest</div>
             <div class="muted" id="profileRole">Student</div>
@@ -181,6 +185,7 @@
 
   <!-- Settings panel -->
   <aside class="settings" id="settings">
+    <button class="btn" id="closeSettings" style="float:right;margin-top:-8px">✖</button>
     <h3>Profile</h3>
     <label>Name<br/><input id="stName"/></label><br/><br/>
     <label>Role<br/><input id="stRole" placeholder="Student"/></label><br/><br/>
@@ -202,7 +207,7 @@
     const $ = (sel,root=document)=>root.querySelector(sel); const $$ = (sel,root=document)=>Array.from(root.querySelectorAll(sel));
     const LS='student-dashboard-v2';
     const state = JSON.parse(localStorage.getItem(LS)||'{}');
-    state.profile = state.profile||{name:'Guest', role:'Student', pic:'https://via.placeholder.com/80'};
+    state.profile = state.profile||{name:'Guest', role:'Student', pic:'profile.png'};
     state.links = state.links||[
       {t:'ChatGPT', u:'https://chat.openai.com'},
       {t:'Google Docs', u:'https://docs.google.com'},
@@ -217,9 +222,9 @@
 
     // ======= Header / Profile =======
     function renderProfile(){
-      $('#profileName').textContent = state.profile.name||'Гость';
+      $('#profileName').textContent = state.profile.name||'Guest';
       $('#profileRole').textContent = state.profile.role||'Student';
-      $('#profilePic').src = state.profile.pic||'https://via.placeholder.com/80';
+      $('#profilePic').src = state.profile.pic||'profile.png';
       // settings form defaults
       $('#stName').value = state.profile.name||'';
       $('#stRole').value = state.profile.role||'';
@@ -265,7 +270,7 @@
       state.subjects.forEach((s,i)=>{
         const el=document.createElement('div'); el.className='subject';
         el.innerHTML=`<div class="ic">${s.ic||'📘'}</div><div style="flex:1;font-weight:700">${s.n}</div>`;
-        const rm=document.createElement('button'); rm.className='btn'; rm.textContent='×'; rm.title='Удалить';
+        const rm=document.createElement('button'); rm.className='btn'; rm.textContent='×'; rm.title='Delete';
         rm.onclick=()=>{ state.subjects.splice(i,1); save(); renderSubjects(); renderSubjectsSelect(); drawAllCharts(); };
         el.appendChild(rm); grid.appendChild(el);
       });
@@ -381,6 +386,12 @@
     renderAll();
     // Quick action placeholder
     $('#qaNewFlashcard').onclick = ()=> alert('FlashCards: Soon ✨');
+  </script>
+  <script>
+    // обработчик для закрытия панели
+    document.getElementById('closeSettings').onclick = () => {
+      document.getElementById('settings').classList.remove('open');
+    };
   </script>
 </body>
 </html>
